@@ -12,7 +12,8 @@ const app = express();
 
 //enable cors
 app.use(cors());
-app.options('*', cors());
+//serve pictures
+app.use(express.static('public'))
 //parse body
 app.use(express.json())
 // log requests
@@ -29,6 +30,10 @@ app.all('*', function (req, res, next) {
 });
 // error handling middleware
 app.use(middleware.routerErrorHandler);
+
+
+
+
 
 const port = process.env.PORT;
 
