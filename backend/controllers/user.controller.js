@@ -77,8 +77,8 @@ exports.updateUser = async (req, res, send) => {
             throw new Error('New passwords mismatch');
         }
 
-        const { tokenNickname } = req;
-        const user = await User.findOne({where: {nickname: tokenNickname}});
+        const { user: tokenUser } = req;
+        const user = await User.findByPK(tokenUser.id);
         if(user) {
             user.nickname = nickname ?? user.nickname;
             if(previousPassword && hash(previousPassword) === user.password) {
