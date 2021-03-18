@@ -21,7 +21,7 @@ exports.login = (req, res, next) => {
         })
     // login with credentials
     } else if(login && password) {
-        const user = Users.find((u) => u.login === login);
+        // const user = Users.find((u) => u.login === login);
         // OK
         if(user && user.password === password) {
             const newToken = jwt.sign({ login }, config.secret_key, { expiresIn: '1h' }); 
@@ -41,3 +41,6 @@ exports.login = (req, res, next) => {
         next(error);
     }
 }
+
+
+
