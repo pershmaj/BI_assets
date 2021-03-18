@@ -5,9 +5,9 @@ const User = require("../models").User;
 const Asset = require("../models").Asset;
 
 exports.login = (req, res, next) => {
-    const {token, login, password} = req.body;
+    const {token, nickname, password} = req.body;
     // login with previous token
-    if(token && login) {
+    if(token && nickname) {
         jwt.verify(token, secret_key, (err) => {
             if(err) {
               // old token
@@ -16,21 +16,20 @@ exports.login = (req, res, next) => {
               next(error)
             } else {
                 // token is ok
-                const newToken = jwt.sign( { login }, secret_key, { expiresIn: '1h' }); 
+                const newToken = jwt.sign( { nickname }, secret_key, { expiresIn: '1h' }); 
                 res.status(200).json({
-                    login: login,
+                    nickname,
                     token: newToken,
                 });
             }
         })
     // login with credentials
-    } else if(login && password) {
-        // const user = Users.find((u) => u.login === login);
+    } else if(nickname && password) {
         // OK
         if(user && user.password === password) {
-            const newToken = jwt.sign({ login }, secret_key, { expiresIn: '1h' }); 
+            const newToken = jwt.sign({ nickname }, secret_key, { expiresIn: '1h' }); 
             res.status(200).json({
-                login: login,
+                nickname,
                 token: newToken,
             });
         // mismatch
