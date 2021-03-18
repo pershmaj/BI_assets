@@ -1,10 +1,11 @@
 const jwt = require('jsonwebtoken');
+const secret_key = process.env.SECRET_KEY;
 
 exports.login = (req, res, next) => {
     const {token, login, password} = req.body;
     // login with previous token
     if(token && login) {
-        jwt.verify(token, config.secret_key, (err) => {
+        jwt.verify(token, secret_key, (err) => {
             if(err) {
               // old token
               const error = new Error('Token is old or invalid');
@@ -12,7 +13,7 @@ exports.login = (req, res, next) => {
               next(error)
             } else {
                 // token is ok
-                const newToken = jwt.sign( { login }, config.secret_key, { expiresIn: '1h' }); 
+                const newToken = jwt.sign( { login }, secret_key, { expiresIn: '1h' }); 
                 res.status(200).json({
                     login: login,
                     token: newToken,
@@ -24,7 +25,7 @@ exports.login = (req, res, next) => {
         // const user = Users.find((u) => u.login === login);
         // OK
         if(user && user.password === password) {
-            const newToken = jwt.sign({ login }, config.secret_key, { expiresIn: '1h' }); 
+            const newToken = jwt.sign({ login }, secret_key, { expiresIn: '1h' }); 
             res.status(200).json({
                 login: login,
                 token: newToken,
