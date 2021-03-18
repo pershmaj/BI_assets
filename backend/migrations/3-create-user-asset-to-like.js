@@ -10,10 +10,18 @@ module.exports = {
                     asset_id: {
                         type: DataTypes.INTEGER(11).UNSIGNED,
                         allowNull: false,
+                        references: {
+                            model: "assets",
+                            key: "id",
+                        },
                       },
                     user_id: {
                         type: DataTypes.INTEGER(11).UNSIGNED,
                         allowNull: false,
+                        references: {
+                            model: "users",
+                            key: "id",
+                        },
                     },
                     createdAt: {
                         type: DataTypes.DATE,
@@ -30,7 +38,10 @@ module.exports = {
                 },
                 { transaction: t }
             ).then(() => 
-                queryInterface.addIndex('Items_unique', ['asset_id', 'user_id'])
+                queryInterface.addIndex("user_asset_to_like", ['asset_id', 'user_id'], {
+                    indexName: "like_unique",
+                    indicesType: 'UNIQUE',
+                })
             );
         });
     },

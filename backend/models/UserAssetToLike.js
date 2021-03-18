@@ -7,7 +7,7 @@ const ModelFunction = function (sequelize, DataTypes) {
     tableName: TableName,
     timestamps: true,
     uniqueKeys: {
-        Items_unique: {
+        "like_unique": {
             fields: ['asset_id', 'user_id']
         }
     }
