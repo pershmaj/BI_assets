@@ -30,6 +30,6 @@ app.all('*', function (req, res, next) {
 // error handling middleware
 app.use(middleware.routerErrorHandler);
 
-const port = config.port ? config.port : 8080;
+const port = process.env.PORT;
 
 app.listen(port, () => logger.info(`Listening on port ${port}`));
