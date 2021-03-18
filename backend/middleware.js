@@ -9,7 +9,7 @@ exports.routerErrorHandler = (err, req, res, next) => {
   res.json(err);
 }
 
-exports.isAuth = (req, res, next) => {
+exports.isAuth = async (req, res, next) => {
   let token = '';
   if(req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
     token = req.headers.authorization.split(' ')[1]
@@ -23,7 +23,8 @@ exports.isAuth = (req, res, next) => {
   }
   try {
     const { nickname } = jwt.verify(token, secret_key);
-    req.tokenNickname = nickname;
+    const user = await User.findOne({where: { nickname }});
+    req.user = user;
     next()
   } catch(e) {
     const error = new Error(err);
