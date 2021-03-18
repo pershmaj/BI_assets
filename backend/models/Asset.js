@@ -45,6 +45,8 @@ const ModelSchema = {
     allowNull: false,
   },
   user_id: {
+    type: DataTypes.INTEGER(11).UNSIGNED,
+    allowNull: false,
     references: {
         model: "User",
         key: "id",

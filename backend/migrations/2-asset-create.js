@@ -23,8 +23,10 @@ module.exports = {
                         allowNull: false,
                     },
                     user_id: {
+                        type: DataTypes.INTEGER(11).UNSIGNED,
+                        allowNull: false,
                         references: {
-                            model: "User",
+                            model: "users",
                             key: "id",
                         },
                     },
