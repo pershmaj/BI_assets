@@ -1,5 +1,8 @@
 const jwt = require('jsonwebtoken');
+const hash = require('object-hash');
 const secret_key = process.env.SECRET_KEY;
+const User = require("../models").User;
+const Asset = require("../models").Asset;
 
 exports.login = (req, res, next) => {
     const {token, login, password} = req.body;
@@ -43,5 +46,52 @@ exports.login = (req, res, next) => {
     }
 }
 
+exports.registration = (req, res, next) => {
+    const { nickname, password1, password2 } = req.body;
+    try {
+        if( password1 !== password2 ) {
+            throw new Error('Passwords doesnt match');
+        }
+        if(nickname && password1) {
+            await User.create({
+                nickname,
+                password: hash(password1),
+            });
+            const newToken = jwt.sign({ nickname }, secret_key, { expiresIn: '1h' }); 
+            res.status(200).json({
+                nickname,
+                token: newToken,
+            });
+        } else {
+            throw new Error('Credentials missing');
+        } 
+    } catch(e) {
+        res.status(500).json(e);
+    }
+}
+
+exports.updateUser = (req, res, send) => {
+    const { nickname, previousPassword, password1, password2 } = req.body;
+    try {
+        if( previousPassword && password1 !== password2 ) {
+            throw new Error('Passwords doesnt match');
+        }
+        if(nickname) {
+            await User.update({
+                nickname,
+                password: hash(password1),
+            });
+            const newToken = jwt.sign({ nickname }, secret_key, { expiresIn: '1h' }); 
+            res.status(200).json({
+                nickname,
+                token: newToken,
+            });
+        } else {
+            throw new Error('Credentials missing');
+        } 
+    } catch(e) {
+        res.status(500).json(e);
+    }
+}
 
 

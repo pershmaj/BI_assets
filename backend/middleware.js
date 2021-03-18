@@ -21,16 +21,14 @@ exports.isAuth = (req, res, next) => {
     error.message = 'No token in request'
     next(error)
   }
-  jwt.verify(token, secret_key, (err) => {
-    if(err) {
-      //Forbidden
-      const error = new Error(err);
-      error.message = 'Wrong token'
-      error.status = 403;
-      next(error)
-    } else {
-      //OK
-      next();
-    }
-  })
+  try {
+    const { nickname } = jwt.verify(token, secret_key);
+    req.tokenNickname = nickname;
+    next()
+  } catch(e) {
+    const error = new Error(err);
+    error.message = 'Wrong token'
+    error.status = 403;
+    next(error)
+  }
 }
