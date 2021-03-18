@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+################################
+#   Setup REDIS Server
+################################
+  redis:
+    image: redis:3.2-alpine
+    expose:
+      - 6379
+    volumes:
+      - redis_data:/data
+    ports:
+        - "6379"
+################################
+#   Setup Socket Server container
+################################
+  server:
+    build: ./backend
+    expose:
+      - 3000
+    depends_on: 
+      - redis
+    volumes:
+      - ./backend:/app
+    links: 
+      - redis
+    networks:
+      - nginx-proxy
+      - default
+################################
+#   Setup nginx 
+################################
+  nginx:
+    build: ./search-app-vue
+    ports:
+      - '80:80' # expose 80 on host and sent to 80 in container
+    links:
+      - server
+      - redis
+    networks:
+      - nginx-proxy
+      - default
+volumes:  
+  redis_data:
+networks:
+  nginx-proxy:
