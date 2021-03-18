@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 const { DataTypes, Sequelize} = require("sequelize");
 const ModelName = "UserAssetToLike";
-const TableName = "User_asset_to_like";
+const TableName = "user_asset_to_like";
 const ModelFunction = function (sequelize, DataTypes) {
   return sequelize.define(ModelName, ModelSchema, {
     tableName: TableName,
