@@ -46,7 +46,7 @@ exports.login = (req, res, next) => {
     }
 }
 
-exports.registration = (req, res, next) => {
+exports.registration = async (req, res, next) => {
     const { nickname, password1, password2 } = req.body;
     try {
         if( password1 !== password2 ) {
@@ -70,24 +70,30 @@ exports.registration = (req, res, next) => {
     }
 }
 
-exports.updateUser = (req, res, send) => {
+exports.updateUser = async (req, res, send) => {
     const { nickname, previousPassword, password1, password2 } = req.body;
     try {
         if( previousPassword && password1 !== password2 ) {
-            throw new Error('Passwords doesnt match');
+            throw new Error('New passwords mismatch');
         }
-        if(nickname) {
-            await User.update({
-                nickname,
-                password: hash(password1),
-            });
-            const newToken = jwt.sign({ nickname }, secret_key, { expiresIn: '1h' }); 
+
+        const { tokenNickname } = req;
+        const user = await User.findOne({where: {nickname: tokenNickname}});
+        if(user) {
+            user.nickname = nickname ?? user.nickname;
+            if(previousPassword && hash(previousPassword) === user.password) {
+                user.password = password1;
+            } else {
+                throw new Error('New and old passwords mismatch');
+            }
+            await user.save();
+            const newToken = jwt.sign({ nickname: user.nickname }, secret_key, { expiresIn: '1h' });
             res.status(200).json({
-                nickname,
+                nickname: user.nickname,
                 token: newToken,
             });
         } else {
-            throw new Error('Credentials missing');
+            throw new Error('user cannot be found');
         } 
     } catch(e) {
         res.status(500).json(e);
