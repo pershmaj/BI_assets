@@ -4,11 +4,11 @@ const secret_key = process.env.SECRET_KEY;
 const User = require("../models").User;
 const Asset = require("../models").Asset;
 
-exports.login = (req, res, next) => {
+exports.login = async (req, res, next) => {
     const {token, nickname, password} = req.body;
     // login with previous token
-    if(token && nickname) {
-        jwt.verify(token, secret_key, (err) => {
+    if(token) {
+        jwt.verify(token, secret_key, async (err) => {
             if(err) {
               // old token
               const error = new Error('Token is old or invalid');
@@ -17,19 +17,23 @@ exports.login = (req, res, next) => {
             } else {
                 // token is ok
                 const newToken = jwt.sign( { nickname }, secret_key, { expiresIn: '1h' }); 
+                const user = await User.findOne({ where: {nickname}, attributes: ['id', 'nickname']});
                 res.status(200).json({
-                    nickname,
+                    id: user.id,
+                    nickname: user.nickname,
                     token: newToken,
                 });
             }
         })
     // login with credentials
     } else if(nickname && password) {
+        const user = await User.findOne({ where: {nickname}, attributes: ['id', 'nickname', 'password']});
         // OK
-        if(user && user.password === password) {
+        if(user && user.password === hash(password)) {
             const newToken = jwt.sign({ nickname }, secret_key, { expiresIn: '1h' }); 
             res.status(200).json({
-                nickname,
+                id: user.id,
+                nickname: user.nickname,
                 token: newToken,
             });
         // mismatch
