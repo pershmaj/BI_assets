@@ -6,7 +6,7 @@ export default defineComponent({
     setup() {
         
         const cred = reactive({
-            login: '',
+            nickname: '',
             password: '',
         });
         const loginErrorMessage = ref('');

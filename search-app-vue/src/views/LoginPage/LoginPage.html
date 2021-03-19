@@ -1,20 +1,21 @@
-<div class="container h-100">
-  <div class="row justify-content-center align-items-center h-100 mt-5">
-    <div class="col-12 col-lg-4">
+<el-container>
+  <el-row>
+    <el-col :span="8" :offset="8" class="bg-purple">
       <form @submit.prevent="DoLogin" class="form border p-4">
         <div v-show="loginErrorMessage">{{loginErrorMessage}}</div>
-        
+
         <label for="login" class="form-label">Login:</label>
-        <input v-model="login" class="form-control" type="text" name="login" value>
-  
+        <el-input placeholder="Nickname" v-model="nickname"></el-input>
+
         <label for="password" class="form-label">Password:</label>
-        <input v-model="password" class="form-control" type="password" name value>
-  
+        <el-input placeholder="Password" v-model="password"  type="password"></el-input>
+
         <div class="text-center">
-          <button class="btn btn-primary mt-2 " :disabled="!login && !password" type="submit" name="button">Login</button>
+          <button class="btn btn-primary mt-2 " :disabled="!login && !password" type="submit"
+            name="button">Login</button>
         </div>
-        
+
       </form>
-    </div>
-  </div>
-</div>
+    </el-col>
+  </el-row>
+</el-container>
