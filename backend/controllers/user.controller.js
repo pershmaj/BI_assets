@@ -56,13 +56,14 @@ exports.registration = async (req, res, next) => {
             throw new Error('Passwords doesnt match');
         }
         if(nickname && password1) {
-            await User.create({
+            const user = await User.create({
                 nickname,
                 password: hash(password1),
             });
             const newToken = jwt.sign({ nickname }, secret_key, { expiresIn: '1h' }); 
             res.status(200).json({
-                nickname,
+                id: user.id,
+                nickname: user.nickname,
                 token: newToken,
             });
         } else {
