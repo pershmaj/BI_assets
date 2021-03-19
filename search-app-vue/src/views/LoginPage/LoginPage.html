@@ -1,21 +1,15 @@
 <el-container>
-  <el-row>
-    <el-col :span="8" :offset="8" class="bg-purple">
-      <form @submit.prevent="DoLogin" class="form border p-4">
-        <div v-show="loginErrorMessage">{{loginErrorMessage}}</div>
-
-        <label for="login" class="form-label">Login:</label>
-        <el-input placeholder="Nickname" v-model="nickname"></el-input>
-
-        <label for="password" class="form-label">Password:</label>
-        <el-input placeholder="Password" v-model="password"  type="password"></el-input>
-
-        <div class="text-center">
-          <button class="btn btn-primary mt-2 " :disabled="!login && !password" type="submit"
-            name="button">Login</button>
-        </div>
-
-      </form>
+    <el-col :offset="8" :span="8" :xs="{span: 18, offset: 3}" style="margin-top: 10rem;">
+      <el-form @submit.native.prevent="DoLogin" label-position="top" label-width="100px">
+        <el-form-item label="Nickname">
+          <el-input v-model="nickname"></el-input>
+        </el-form-item>
+        <el-form-item label="Password">
+          <el-input v-model="password" type="password"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button native-type="submit" type="primary" @click="DoLogin" :disabled="!nickname && !password">Login</el-button>
+        </el-form-item>
+      </el-form>
     </el-col>
-  </el-row>
 </el-container>
