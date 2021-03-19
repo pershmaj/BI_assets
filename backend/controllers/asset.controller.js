@@ -39,7 +39,7 @@ exports.createAsset = async(req, res, next) => {
     }
 }
 
-exports.updateAsset = async (req, res, next) {
+exports.updateAsset = async (req, res, next) => {
     const { id } = req.params;
     const { name } = req.body;
     const link = req.asset.filename;
@@ -61,7 +61,7 @@ exports.updateAsset = async (req, res, next) {
     }
 }
 
-exports.deleteAsset = async (req, rex, next) {
+exports.deleteAsset = async (req, rex, next) => {
     const { id } = req.params;
     const { user } = req;
     try {
