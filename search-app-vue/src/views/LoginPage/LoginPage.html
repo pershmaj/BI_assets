@@ -8,9 +8,9 @@
           <el-input v-model="password" type="password"></el-input>
         </el-form-item>
         <el-form-item style="text-align: right">
-          <el-button native-type="submit" type="primary" @click="DoLogin" :disabled="!nickname && !password">Login</el-button>
+          <el-button native-type="submit" type="primary" :disabled="!nickname && !password">Login</el-button>
           <br>
-          <el-link @click="ToRegistration" type="success">Registration</el-link> 
+          <el-link href="#" @click="ToRegistration" type="success">Registration</el-link> 
         </el-form-item>
 
       </el-form>
