@@ -44,13 +44,14 @@ export default createStore({
           commit('SET_TOKEN', data.token);
           commit('SET_NICKNAME', data.nickname);
           commit('SET_ID', data.id);
-          commit('SET_ASSETS', data.assets);
+          // commit('SET_ASSETS', data.assets);
           axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
           localStorage.setItem('user', JSON.stringify(data));
         } else {
           throw new Error('Server haven\'t returned token and nickname');
         }
       } catch (e) {
+        console.error(e);
         if (e.status === 500) {
           e.message = 'Unexpected server error, try to connect later'
         } else {
