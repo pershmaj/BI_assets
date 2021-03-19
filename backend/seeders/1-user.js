@@ -26,7 +26,7 @@ module.exports = {
 const data = [
   {
       nickname: 'dima',
-      password: "7b343448ed87b254b79eba27bc18c21b2f985f0c", // 1
+      password: "1aee48a1ce9885851ed10b486ed333ee181944db", // 1
   },
   {
       nickname: 'bi',
