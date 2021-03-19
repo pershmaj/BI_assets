@@ -15,6 +15,10 @@ export default defineComponent({
             router.push('/');
         }
 
+        function ToRegistration() {
+            router.push('/registration');
+        }
+
         function LoginError(message: string) {
             loginErrorMessage.value = message;
         }
@@ -41,6 +45,7 @@ export default defineComponent({
             ...toRefs(cred),
             loginErrorMessage,
             DoLogin,
+            ToRegistration,
         }
     }
 })
