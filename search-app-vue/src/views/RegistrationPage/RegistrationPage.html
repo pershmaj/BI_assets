@@ -1,0 +1,20 @@
+<el-container>
+    <el-col :offset="8" :span="8" :xs="{span: 18, offset: 3}" style="margin-top: 10rem;">
+      <el-form @submit.native.prevent="DoRegister" label-position="top" label-width="100px">
+        <el-form-item label="Nickname">
+          <el-input v-model="nickname"></el-input>
+        </el-form-item>
+        <el-form-item label="Password">
+          <el-input v-model="password1" type="password"></el-input>
+        </el-form-item>
+        <el-form-item label="Repeat password">
+            <el-input v-model="password2" type="password"></el-input>
+          </el-form-item>
+        <el-form-item style="text-align: right">
+          <el-button native-type="submit" type="primary" :disabled="!nickname && !password1 && !password2">Registration</el-button>
+          <br>
+          <el-link href="#" @click="ToLogin" type="success">Login</el-link> 
+        </el-form-item>
+      </el-form>
+    </el-col>
+</el-container>
