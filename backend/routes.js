@@ -6,7 +6,6 @@ const middleware = require("./middleware");
 
 const router = express.Router();
 var multer  = require('multer');
-var uploadPhoto = multer({ dest: './public/assets/'});
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, './public/assets/')
@@ -16,7 +15,7 @@ var storage = multer.diskStorage({
       cb(null, filename);
     }
   });
-var uploadFile = multer({ storage: storage });
+var uploadPhoto= multer({ storage: storage });
 
 router.post('/login', user.login);
 router.post('/registration', user.registration);

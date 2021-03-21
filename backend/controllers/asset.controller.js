@@ -41,7 +41,7 @@ exports.createAsset = async(req, res, next) => {
 exports.updateAsset = async (req, res, next) => {
     const { id } = req.params;
     const { name } = req.body;
-    const link = req.asset.filename;
+    const link = req.file.filename;
     const { user } = req;
     try {
         const asset = await Asset.findByPk(id);
