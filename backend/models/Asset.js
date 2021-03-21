@@ -14,7 +14,8 @@ const ModelFunction = function (sequelize, DataTypes) {
       UserAssetToLike,
     } = models;
 
-    Asset.hasOne(User, {
+    Asset.belongsTo(User, {
+      as: 'owner',
       foreignKey: "user_id",
     });
 

@@ -6,7 +6,8 @@ exports.getAssets = async (req, res, next) => {
     try {
         const assets = await Asset.findAll({
             include: [
-                { model: User, as: 'likes'}
+                { model: User, as: 'likes', attributes: ['id', 'nickname'] },
+                { model: User, as: 'owner', attributes: ['id', 'nickname']}
             ]
         });
         res.status(200).json({assets});
