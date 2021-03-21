@@ -51,7 +51,6 @@ export default createStore({
           throw new Error('Server haven\'t returned token and nickname');
         }
       } catch (e) {
-        console.error(e);
         if (e.status === 500) {
           e.message = 'Unexpected server error, try to connect later'
         } else {
@@ -82,5 +81,19 @@ export default createStore({
         throw new Error(e);
       }
     },
+    async GetAssets({ commit }) {
+      try {
+        const { data } = await axios.get(api.host + api.urls.getAssets);
+        if(data.hasOwnPropery('assets')) {
+          if(data.assets && data.assents.length) {
+            commit('SET_ASSETS', data.assets);
+          } 
+        } else {
+          throw new Error("Aseets havent been provided");
+        }
+      }catch(e) {
+        throw new Error(e);
+      }
+    }
   },
 })
