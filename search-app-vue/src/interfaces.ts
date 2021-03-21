@@ -1,7 +1,7 @@
 export interface User {
     id: number;
     nickname: string;
-    assets: Asset[];
+    assets?: Asset[];
 }
 
 export interface Asset {
@@ -9,7 +9,8 @@ export interface Asset {
     name: string;
     link: string;
     user_id: number;
-    likes: Like[];
+    likes: User[];
+    owner: User;
 }
 
 export interface Like {
