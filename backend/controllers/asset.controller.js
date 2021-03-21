@@ -4,7 +4,7 @@ const fs = require('fs');
 
 exports.getAssets = async (req, res, next) => {
     try {
-        const assets = await Assets.findAll({
+        const assets = await Asset.findAll({
             include: [
                 { model: User, as: 'likes'}
             ]
@@ -13,8 +13,6 @@ exports.getAssets = async (req, res, next) => {
     } catch(e) {
         next(e);
     }
-    
-
 }
 
 exports.createAsset = async(req, res, next) => {
