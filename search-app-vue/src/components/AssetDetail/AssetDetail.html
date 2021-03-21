@@ -1,1 +1,37 @@
-<div></div>
+<transition name="modal">
+    <div class="modal-mask">
+      <div class="modal-wrapper">
+        <div class="modal-container">
+
+          <div class="modal-header">
+            <slot name="header">
+              {{asset.name}}
+            </slot>
+          </div>
+
+          <div class="modal-body">
+            <slot name="body">
+              <el-row style="margin-bottom: 20px;">
+                  <el-col :span="24">
+                    <el-image :src="link" fit="contain"/>
+                  </el-col>
+              </el-row>
+              <el-row>
+                  <el-col>
+                    <input @change="onFileChange" type="file">
+                    <el-input v-model="name"></el-input>
+                  </el-col>
+              </el-row>
+            </slot>
+          </div>
+
+          <div class="modal-footer">
+            <slot name="footer">
+                <el-button class="modal-default-button" @click="SaveAsset">Save</el-button>
+                <el-button class="modal-default-button" @click="$emit('close')">Close</el-button>
+            </slot>
+          </div>
+        </div>
+      </div>
+    </div>
+  </transition>

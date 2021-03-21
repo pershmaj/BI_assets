@@ -1,3 +1,20 @@
-<div >
-
+<div class="asset">
+    <el-image :src="link" fit="contain" />
+    <el-row align="bottom">
+        <el-col :span="12">Name: {{asset.name}} <br>{{owner}}</el-col>
+        <el-col :span="12" class="asset-icons">
+            <span v-if="changePermission" @click="HandleAssetDetail(true)" class="el-icon-s-tools change"></span>
+            <el-tooltip :disabled="!asset.likes.length" placement="top" :content="likes">
+                <span>
+                    {{asset.likes.length}}
+                    <span @click="DoLike" :class="likeIcon" />     
+                </span> 
+            </el-tooltip>
+        </el-col>
+    </el-row>
 </div>
+<AssetDetail 
+    v-if="changePermission && assetDetailHandler"
+    :asset="asset" 
+    @close="(v) => HandleAssetDetail(v)"
+/>
