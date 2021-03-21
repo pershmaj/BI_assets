@@ -2,6 +2,7 @@ import { createStore } from 'vuex';
 import api from '@/api';
 import axios from 'axios';
 import { Asset } from '@/interfaces';
+import noty from '@/noty';
 
 //maybe u think that inreface name have to start with I but tslint dont think so
 interface AppStore {
@@ -32,9 +33,28 @@ export default createStore({
       state.assets.push(...p);
     },
     REMOVE_ASSET(state: AppStore, p: Asset) {
-      state.assets.filter(ass => ass.id !== p.id);
+      const index = state.assets.findIndex(ass => ass.id === p.id);
+      if(index !== -1) {
+        state.assets.splice(index, 1);
+      } else {
+        throw new Error('Cannot find asset');
+      }
     },
-
+    DO_LIKE(state: AppStore, assetId: number) {
+      const assetIndex = state.assets.findIndex((el) => el.id === assetId);
+      if(assetIndex !== -1) {
+        const likeIndex = state.assets[assetIndex].likes.findIndex((el) => el.id === state.id);
+        if(likeIndex === -1) {
+          //add like
+          state.assets[assetIndex].likes.push({id: state.id, nickname: state.nickname});
+        } else {
+          // remove like
+          state.assets[assetIndex].likes.splice(likeIndex, 1);
+        }
+      } else {
+        throw new Error('Cannot find asset');
+      }
+    },
   },
   actions: {
     async DoLogin({ commit }, cred) {
@@ -84,16 +104,29 @@ export default createStore({
     async GetAssets({ commit }) {
       try {
         const { data } = await axios.get(api.host + api.urls.getAssets);
-        if(data.hasOwnPropery('assets')) {
-          if(data.assets && data.assents.length) {
+        if(data.assets?.length) {
             commit('SET_ASSETS', data.assets);
-          } 
         } else {
           throw new Error("Aseets havent been provided");
         }
       }catch(e) {
         throw new Error(e);
       }
+    },
+    async DoLike({ commit }, assetid: number) {
+        try {
+          const { data } = await axios.get(api.host + api.urls.like(this.state.id, assetid))
+          
+          if(data.message) {
+            commit('DO_LIKE', assetid);
+            noty.success('Like', data.message)
+          } else {
+            throw new Error('Wrong response');
+          }
+        } catch(e) {
+          console.error(e);
+          throw new Error(e);
+        }
     }
   },
 })
