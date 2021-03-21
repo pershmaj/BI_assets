@@ -37,7 +37,9 @@ export default createStore({
       if(index !== -1) {
         state.assets.splice(index, 1);
       } else {
-        throw new Error('Cannot find asset');
+        const error = new Error('Cannot find asset');
+        noty.error('Error', error.message);
+        throw error;
       }
     },
     DO_LIKE(state: AppStore, assetId: number) {
@@ -52,7 +54,9 @@ export default createStore({
           state.assets[assetIndex].likes.splice(likeIndex, 1);
         }
       } else {
-        throw new Error('Cannot find asset');
+        const error = new Error('Cannot find asset');
+        noty.error('Error', error.message);
+        throw error;
       }
     },
   },
@@ -76,6 +80,7 @@ export default createStore({
         } else {
           e.message = 'Credintials mismatch'
         }
+        noty.error('Error', e.message);
         throw new Error(e);
       }
     },
@@ -92,12 +97,12 @@ export default createStore({
           throw new Error('Server haven\'t returned token and nickname');
         }
       } catch (e) {
-        console.error(e);
         if (e.status === 500) {
           e.message = 'Unexpected server error, try to connect later'
         } else {
-          e.message = 'Credintials error'
+          e.message = 'Credentials error'
         }
+        noty.error('Error', e.message);
         throw new Error(e);
       }
     },
@@ -110,6 +115,7 @@ export default createStore({
           throw new Error("Aseets havent been provided");
         }
       }catch(e) {
+        noty.error('Error', e.message);
         throw new Error(e);
       }
     },
@@ -125,6 +131,7 @@ export default createStore({
           }
         } catch(e) {
           console.error(e);
+          noty.error('Error', e.message);
           throw new Error(e);
         }
     }
