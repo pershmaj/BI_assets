@@ -4,9 +4,8 @@ exports.doLike = async (req, res, next) => {
     const { user_id, asset_id } = req.params;
 
     try {
-
-        if(user_id !== user.id) {
-            throw new Error('Permission denied');
+        if(user_id != req.user.id) {
+            throw new Error('Permission denied to like');
         }
 
         const like = await UserAssetToLike.findOne({
