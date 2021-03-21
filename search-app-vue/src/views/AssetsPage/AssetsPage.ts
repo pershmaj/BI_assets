@@ -9,13 +9,15 @@ export default defineComponent({
     setup(){
         
         const assets = computed(() => store.state.assets);
-        
+        const nickname = computed(() => store.state.nickname);
+
         onMounted(() => {
             store.dispatch('GetAssets');
         });
 
         return {
             assets,
+            nickname,
         }
     }
 })
