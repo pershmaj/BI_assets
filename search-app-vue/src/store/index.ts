@@ -32,6 +32,9 @@ export default createStore({
     SET_ASSETS(state: AppStore, p: Asset[]) {
       state.assets.push(...p);
     },
+    EMPTY_ASSETS(state: AppStore) {
+      state.assets.splice(0, state.assets.length);
+    },
     REMOVE_ASSET(state: AppStore, p: Asset) {
       const index = state.assets.findIndex(ass => ass.id === p.id);
       if(index !== -1) {
@@ -110,6 +113,7 @@ export default createStore({
       try {
         const { data } = await axios.get(api.host + api.urls.getAssets);
         if(data.assets?.length) {
+            commit('EMPTY_ASSETS');
             commit('SET_ASSETS', data.assets);
         } else {
           throw new Error("Aseets havent been provided");
