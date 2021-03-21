@@ -1,6 +1,7 @@
 const logger = require('./winston');
 const jwt = require('jsonwebtoken');
 const secret_key = process.env.SECRET_KEY;
+const User = require("./models").User;
 
 exports.routerErrorHandler = (err, req, res, next) => {
   logger.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
@@ -23,11 +24,11 @@ exports.isAuth = async (req, res, next) => {
   }
   try {
     const { nickname } = jwt.verify(token, secret_key);
-    const user = await User.findOne({where: { nickname }});
+    const user = await User.findOne({where: { nickname }, attributes: ['id', 'nickname']});
     req.user = user;
     next()
   } catch(e) {
-    const error = new Error(err);
+    const error = new Error(e);
     error.message = 'Wrong token'
     error.status = 403;
     next(error)
