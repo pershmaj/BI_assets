@@ -1,3 +1,20 @@
-<div class="container">
+<!-- <el-container> -->
+    <el-row>
+        <el-col :offset="8" :span="8" align="center">
+            <h1>BI Assets</h1>
+        </el-col>
+        <el-col :span="8">
+            <!-- login icon -->
+        </el-col>
+    </el-row>
+    <el-row :gutter="10">
+        <el-col v-for="asset in assets" 
+            :key="asset.id" 
+            :span="6"
+            style="margin-top: 10px;"
+        >
+            <AssetItem  :asset="asset"  />
+        </el-col>
+    </el-row>
     
-</div>
+<!-- </el-container> -->

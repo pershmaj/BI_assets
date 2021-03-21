@@ -1,13 +1,21 @@
-import { defineComponent } from "vue";
+import { computed, defineComponent, onMounted } from "vue";
 import AssetItem from "@/components/AssetItem/AssetItem.vue";
+import store from "@/store";
 
 export default defineComponent({
     components: {
         AssetItem,
     },
     setup(){
-        return {
+        
+        const assets = computed(() => store.state.assets);
+        
+        onMounted(() => {
+            store.dispatch('GetAssets');
+        });
 
+        return {
+            assets,
         }
     }
 })
