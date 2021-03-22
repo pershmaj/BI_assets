@@ -20,6 +20,11 @@ export default createStore({
     token: '',
     assets: [], 
   },
+  getters: {
+    OwnAssets(state: AppStore) {
+      return state.assets.filter((asset) => asset.user_id === state.id);
+    }
+  },
   mutations: {
     SET_TOKEN(state: AppStore, p: string) {
       state.token = p;
@@ -142,6 +147,26 @@ export default createStore({
       } catch(e) {
           noty.error('Error', 'Error while updating photo');
           console.error(e);
+      }
+    },
+    async DeleteAsset({ commit }, assetid: number) {
+      try {
+        const { data } = await axios.delete(api.host + api.urls.deleteAsset(assetid));
+        const asset = this.state.assets.find((a) => a.id === assetid);
+        if(asset) {
+          commit('REMOVE_ASSET', asset);
+        } else {
+          throw new Error('Cannot find asset');
+        }
+        if(data.message) {
+          noty.success('Asset deleted', data.message);
+        } else {
+          throw new Error('Invalid server response');
+        }
+        
+      } catch(e) {
+        noty.error('Error', 'Error while deleting asset');
+        console.error(e);
       }
     },
     async DoLike({ commit }, assetid: number) {
