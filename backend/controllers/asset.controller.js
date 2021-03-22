@@ -1,5 +1,6 @@
 const User = require("../models").User;
 const Asset = require("../models").Asset;
+const UserAssetToLike = require("../models").UserAssetToLike;
 const fs = require('fs');
 
 exports.getAssets = async (req, res, next) => {
@@ -53,6 +54,16 @@ exports.updateAsset = async (req, res, next) => {
         if(asset.user_id !== user.id) {
             throw new Error('Permission denied');
         }
+        //delete old file
+        const targetPath = `./public/assets/${asset.link}`;
+        if(fs.existsSync(targetPath)) {
+            fs.unlink(targetPath, err => {
+              if (err) throw new Error(err);
+            });
+        } else {
+            throw new Error('Cannot find asset file');
+        } 
+
         asset.name = name ?? asset.name;
         asset.link = link ?? asset.link;
         await asset.save();
@@ -65,18 +76,18 @@ exports.updateAsset = async (req, res, next) => {
     }
 }
 
-exports.deleteAsset = async (req, rex, next) => {
+exports.deleteAsset = async (req, res, next) => {
     const { id } = req.params;
     const { user } = req;
     try {
         const asset = await Asset.findByPk(id);
-        if(asset.user_id !== user.id) {
+        if(asset.user_id != user.id) {
             throw new Error('Permission denied');
         }
+        
         const link = asset.link;
         const targetPath = `./public/assets/${link}`
-        await asset.destroy();
-
+        
         if(fs.existsSync(targetPath)) {
             fs.unlink(targetPath, err => {
               if (err) throw new Error(err);
@@ -84,6 +95,9 @@ exports.deleteAsset = async (req, rex, next) => {
         } else {
             throw new Error('Cannot find asset file');
         } 
+
+        await UserAssetToLike.destroy({where: {asset_id: asset.id}})
+        await asset.destroy();
         
         res.status(200).json({
             message: 'Asset successfully deleted'
