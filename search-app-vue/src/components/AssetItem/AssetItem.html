@@ -6,7 +6,8 @@
           <div class="bottom clearfix asset-icons">
                 <div><b>{{owner}}</b></div>
                 <div>
-                    <span v-if="changePermission" @click="HandleAssetDetail(true)" class="el-icon-s-tools change"></span>
+                    <span v-if="changePermission" @click="HandleAssetDetail(true)" class="el-icon-setting change"></span>
+                    <span v-if="changePermission" @click="DeleteAsset" class="el-icon-delete change"></span>
                     <el-tooltip :disabled="!asset.likes.length" placement="top" :content="likes">
                         <span>
                             {{asset.likes.length}}

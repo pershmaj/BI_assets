@@ -4,6 +4,8 @@ import store from "@/store";
 import { computed, defineComponent } from "@vue/runtime-core";
 import AssetDetail from "@/components/AssetDetail/AssetDetail.vue"
 import { ref } from "vue";
+import { ElMessageBox } from 'element-plus';
+import noty from "@/noty";
 
 export default defineComponent({
     components: {
@@ -44,6 +46,23 @@ export default defineComponent({
             store.dispatch('DoLike', props.asset.id);
         }
 
+        function DeleteAsset() {
+            const mb: any = ElMessageBox;
+            mb.confirm('This will permanently delete the file. Continue?', 'Warning', {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'warning'
+            }).then(async () => {
+                try {
+                    store.dispatch('DeleteAsset', props.asset.id);
+                } catch (e) {
+                    console.error(e);
+                }
+            }).catch(() => {
+                noty.warning('Deleting canceled', 'No changes applied');
+            });
+        }
+
         const assetDetailHandler = ref(false);
         function HandleAssetDetail(v: boolean) {
             assetDetailHandler.value = v;
@@ -59,6 +78,7 @@ export default defineComponent({
 
             DoLike,
             HandleAssetDetail,
+            DeleteAsset,
         };
     }
 })
