@@ -44,7 +44,12 @@ exports.updateAsset = async (req, res, next) => {
     const link = req.file.filename;
     const { user } = req;
     try {
-        const asset = await Asset.findByPk(id);
+        const asset = await Asset.findByPk(id, {
+            include: [
+                { model: User, as: 'likes', attributes: ['id', 'nickname'] },
+                { model: User, as: 'owner', attributes: ['id', 'nickname']}
+            ]
+        });
         if(asset.user_id !== user.id) {
             throw new Error('Permission denied');
         }
