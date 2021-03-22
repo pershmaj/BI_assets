@@ -3,6 +3,7 @@ import api from '@/api';
 import axios from 'axios';
 import { Asset } from '@/interfaces';
 import noty from '@/noty';
+import { fileUpload } from '@/file-upload';
 
 //maybe u think that inreface name have to start with I but tslint dont think so
 interface AppStore {
@@ -121,6 +122,26 @@ export default createStore({
       }catch(e) {
         noty.error('Error', e.message);
         throw new Error(e);
+      }
+    },
+    async UpdateAsset({ commit }, {newphoto, name, assetid}) {
+      const url = api.host+api.urls.updateAsset(assetid);
+      try {
+          const data = await fileUpload(
+              newphoto.image.toString(), 
+              name, 
+              'asset', 
+              url, 
+              'put')
+          const body = await data.json();
+          console.log(body)
+          const asset = body.asset;
+          commit('REMOVE_ASSET', asset);
+          commit('SET_ASSETS', [asset]);
+          noty.success('Asset upload', body.message);
+      } catch(e) {
+          noty.error('Error', 'Error while updating photo');
+          console.error(e);
       }
     },
     async DoLike({ commit }, assetid: number) {

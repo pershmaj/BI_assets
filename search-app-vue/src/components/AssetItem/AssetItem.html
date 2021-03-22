@@ -1,17 +1,25 @@
 <div class="asset">
-    <el-image :src="link" fit="contain" />
-    <el-row align="bottom">
-        <el-col :span="12">Name: {{asset.name}} <br>{{owner}}</el-col>
-        <el-col :span="12" class="asset-icons">
-            <span v-if="changePermission" @click="HandleAssetDetail(true)" class="el-icon-s-tools change"></span>
-            <el-tooltip :disabled="!asset.likes.length" placement="top" :content="likes">
-                <span>
-                    {{asset.likes.length}}
-                    <span @click="DoLike" :class="likeIcon" />     
-                </span> 
-            </el-tooltip>
-        </el-col>
-    </el-row>
+    <el-card :body-style="{ padding: '0px' }">
+        <el-image :src="link" class="image" fit="contain" />
+        <div style="padding: 14px;">
+          <span>{{asset.name}}</span>
+          <div class="bottom clearfix asset-icons">
+                <div><b>{{owner}}</b></div>
+                <div>
+                    <span v-if="changePermission" @click="HandleAssetDetail(true)" class="el-icon-s-tools change"></span>
+                    <el-tooltip :disabled="!asset.likes.length" placement="top" :content="likes">
+                        <span>
+                            {{asset.likes.length}}
+                            <span @click="DoLike" :class="likeIcon" />     
+                        </span> 
+                    </el-tooltip>
+                </div>
+
+                
+            
+          </div>
+        </div>
+    </el-card>
 </div>
 <AssetDetail 
     v-if="changePermission && assetDetailHandler"

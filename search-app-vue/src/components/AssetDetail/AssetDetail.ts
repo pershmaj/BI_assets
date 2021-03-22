@@ -5,9 +5,14 @@ import noty from "@/noty";
 import { computed, defineComponent, reactive } from "@vue/runtime-core";
 import axios from "axios";
 import { ref } from "vue";
+import Modal from "@/components/Modal/Modal.vue";
+import store from "@/store";
 
 
 export default defineComponent({
+    components: {
+        Modal,
+    },
     props: {
         asset: {
             type: Object as () => Asset,
@@ -47,23 +52,17 @@ export default defineComponent({
         }
 
         async function SaveAsset() {
-            const url = api.host+api.urls.updateAsset(props.asset.id);
             try {
-                const data = await fileUpload(
-                    newphoto.image.toString(), 
-                    name.value, 
-                    'asset', 
-                    url, 
-                    'put')
-                const body = await data.json();
-                console.log(body)
-                emit('close', false)
-                noty.success('Asset upload', body.message)
+                await store.dispatch('UpdateAsset', {
+                    newphoto,
+                    name: name.value,
+                    assetid: props.asset.id,
+                })
             } catch(e) {
-                console.error(e)
+                console.error(e);
+            } finally {
+                emit('close', false)
             }
-            
-            
         }
 
         return {
