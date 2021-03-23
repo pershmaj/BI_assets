@@ -8,7 +8,9 @@
     "start": "nodemon index.js",
     "migrate": "npx sequelize db:migrate",
     "create-db": "npx sequelize db:create",
-    "wipe": "npx sequelize-cli db:migrate:undo:all && npx sequelize-cli db:migrate &&  npx sequelize-cli db:seed:all"
+    "wipe": "npx sequelize-cli db:migrate:undo:all && npx sequelize-cli db:migrate &&  npx sequelize-cli db:seed:all",
+    "create-config": "npx sequelize init:config",
+    "setup": "npm run create-db && npm run wipe"
   },
   "keywords": [],
   "author": "",
