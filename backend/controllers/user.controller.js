@@ -74,21 +74,23 @@ exports.registration = async (req, res, next) => {
     }
 }
 
-exports.updateUser = async (req, res, send) => {
+exports.updateUser = async (req, res, next) => {
     const { nickname, previousPassword, password1, password2 } = req.body;
     try {
-        if( previousPassword && password1 !== password2 ) {
+        if( !!previousPassword && password1 !== password2 ) {
             throw new Error('New passwords mismatch');
         }
 
         const { user: tokenUser } = req;
-        const user = await User.findByPK(tokenUser.id);
+        const user = await User.findByPk(tokenUser.id);
         if(user) {
             user.nickname = nickname ?? user.nickname;
-            if(previousPassword && hash(previousPassword) === user.password) {
-                user.password = password1;
-            } else {
-                throw new Error('New and old passwords mismatch');
+            if(!!previousPassword) {
+                if(hash(previousPassword) === user.password) {
+                    user.password = hash(password1);
+                } else {
+                    throw new Error('New and old passwords mismatch');
+                }
             }
             await user.save();
             const newToken = jwt.sign({ nickname: user.nickname }, secret_key, { expiresIn: '1h' });
@@ -100,7 +102,7 @@ exports.updateUser = async (req, res, send) => {
             throw new Error('user cannot be found');
         } 
     } catch(e) {
-        res.status(500).json(e);
+        next(e);
     }
 }
 
