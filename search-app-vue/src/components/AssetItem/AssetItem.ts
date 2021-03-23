@@ -18,7 +18,6 @@ export default defineComponent({
         }
     },
     setup(props, ctx) {
-        console.log(props.asset)
         const link = computed(() => {
             return `${api.host}/assets/${props.asset.link}`
         });
