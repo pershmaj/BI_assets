@@ -18,12 +18,9 @@ exports.getAssets = async (req, res, next) => {
 }
 
 exports.createAsset = async(req, res, next) => {
-    const { name } = req.body;
-    const link = req.asset.filename;
+    const { originalname: name, filename: link } = req.file;
     const { user } = req;
     try {
-        
-        
         const asset = await Asset.create({
             name,
             link,
@@ -41,8 +38,8 @@ exports.createAsset = async(req, res, next) => {
 
 exports.updateAsset = async (req, res, next) => {
     const { id } = req.params;
-    const { name } = req.body;
-    const link = req.file.filename;
+    const { originalname: name, filename: link } = req.file;
+    // const link = req.file.filename;
     const { user } = req;
     try {
         const asset = await Asset.findByPk(id, {
@@ -61,9 +58,8 @@ exports.updateAsset = async (req, res, next) => {
               if (err) throw new Error(err);
             });
         } else {
-            throw new Error('Cannot find asset file');
+            console.error('Cannot find asset file');
         } 
-
         asset.name = name ?? asset.name;
         asset.link = link ?? asset.link;
         await asset.save();
@@ -93,7 +89,7 @@ exports.deleteAsset = async (req, res, next) => {
               if (err) throw new Error(err);
             });
         } else {
-            throw new Error('Cannot find asset file');
+            console.error('Cannot find asset file');
         } 
 
         await UserAssetToLike.destroy({where: {asset_id: asset.id}})
