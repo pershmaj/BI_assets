@@ -19,6 +19,7 @@ var uploadPhoto= multer({ storage: storage });
 
 router.post('/login', user.login);
 router.post('/registration', user.registration);
+router.put('/user/:id',middleware.isAuth, user.updateUser);
 
 router.get('/asset', middleware.isAuth, asset.getAssets);
 router.post('/asset', middleware.isAuth, uploadPhoto.single('asset'), asset.createAsset);
