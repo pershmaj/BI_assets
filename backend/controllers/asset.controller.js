@@ -21,12 +21,18 @@ exports.createAsset = async(req, res, next) => {
     const { originalname: name, filename: link } = req.file;
     const { user } = req;
     try {
-        const asset = await Asset.create({
+        const a = await Asset.create({
             name,
             link,
             user_id: user.id,
         });
-
+        // call with all relations
+        const asset = await Asset.findByPk(a.id, {
+            include: [
+                { model: User, as: 'likes', attributes: ['id', 'nickname'] },
+                { model: User, as: 'owner', attributes: ['id', 'nickname']}
+            ]
+        });
         res.status(200).json({
             asset,
             message: 'Asset successfully created'
