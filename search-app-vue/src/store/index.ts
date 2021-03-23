@@ -115,6 +115,29 @@ export default createStore({
         throw new Error(e);
       }
     },
+    async UpdateUser({ commit }, cred) {
+      try {
+        const { data } = await axios.put(api.host + api.urls.updateUser(this.state.id), cred);
+        if (data.token && data.nickname) {
+          if(cred.nickname !== this.state.nickname) {
+            // there are too much places where nickname appears
+            // so I think rather to upload data one more time with applied changes
+            // then change manually 
+            this.dispatch('GetAssets');
+          }
+          commit('SET_TOKEN', data.token);
+          commit('SET_NICKNAME', data.nickname);
+          axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+          localStorage.setItem('user', JSON.stringify(data));
+          noty.success('Profile update', 'Profile successfully updated');
+        } else {
+          throw new Error('Server haven\'t returned token and nickname');
+        }
+      } catch(e) {
+        noty.error('Error', e.message);
+        throw new Error(e);
+      }
+    },
     async GetAssets({ commit }) {
       try {
         const { data } = await axios.get(api.host + api.urls.getAssets);
@@ -129,6 +152,27 @@ export default createStore({
         throw new Error(e);
       }
     },
+    async CreateAsset({ commit }, {asset, name}) {
+      try {
+        const data = await fileUpload(
+          asset.image.toString(),
+          name,
+          'asset',
+          api.host + api.urls.createAsset,
+          'post',
+        );
+        const body = await data.json();
+        if(body.asset && body.message) {
+          commit('SET_ASSETS', [body.asset]);
+          noty.success('Asset created', body.message);
+        } else {
+          throw new Error('Wrong server response');
+        }
+      } catch(e) {
+        noty.error('Error', 'Error while creating asset');
+        console.error(e);
+      }
+    },
     async UpdateAsset({ commit }, {newphoto, name, assetid}) {
       const url = api.host+api.urls.updateAsset(assetid);
       try {
@@ -139,13 +183,12 @@ export default createStore({
               url, 
               'put')
           const body = await data.json();
-          console.log(body)
           const asset = body.asset;
           commit('REMOVE_ASSET', asset);
           commit('SET_ASSETS', [asset]);
           noty.success('Asset upload', body.message);
       } catch(e) {
-          noty.error('Error', 'Error while updating photo');
+          noty.error('Error', 'Error while updating asset');
           console.error(e);
       }
     },
