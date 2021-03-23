@@ -1,10 +1,13 @@
-import { computed, defineComponent, onMounted } from "vue";
+import { computed, defineComponent, onMounted, ref } from "vue";
 import AssetItem from "@/components/AssetItem/AssetItem.vue";
 import store from "@/store";
+import UserDetail from '@/components/UserDetail/UserDetail.vue'
 
 export default defineComponent({
     components: {
         AssetItem,
+        UserDetail,
+
     },
     setup(){
         
@@ -14,10 +17,17 @@ export default defineComponent({
         onMounted(() => {
             store.dispatch('GetAssets');
         });
+        const userDetailHandler = ref(false);
+        function HandleUserDetail(v: boolean) {
+            userDetailHandler.value = v;
+        }
 
         return {
             assets,
             nickname,
+            userDetailHandler,
+
+            HandleUserDetail,
         }
     }
 })
