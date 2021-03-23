@@ -1,1 +1,57 @@
-<div></div>
+<Modal>
+    <template v-slot:header>
+        Update user info
+    </template>
+    <template v-slot:body>
+        <el-row>
+            <el-col :span="24">
+                <el-form label-width="140px">
+                    <el-form-item label="Nickname">
+                        <el-input v-model="nickname"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Previous password">
+                        <el-input v-model="previousPassword" type="password"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Password">
+                        <el-input v-model="password1" type="password"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Repeat password">
+                        <el-input v-model="password2" type="password"></el-input>
+                    </el-form-item>
+                </el-form>
+            </el-col>
+            <el-col :span="24" style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+                <el-button class="modal-default-button" @click="UpdateUser">Save</el-button>
+            </el-col>
+        </el-row>
+        <hr>
+        <el-row>
+            <el-col :span="24">Add new asset</el-col>
+            <el-col :span="24">
+                <el-row>
+                    <el-form label-width="140px">
+                        <el-form-item label="Name">
+                            <el-input v-model="asset.name"></el-input>
+                        </el-form-item>
+                        <el-form-item label="Asset file">
+                            <input type="file" @change="onFileChange"/>
+                        </el-form-item>
+                    </el-form>
+                    <el-col :span="24" style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+                        <el-button class="modal-default-button" @click="CreateAsset">Create Asset</el-button>
+                    </el-col>
+                </el-row>
+            </el-col>
+        </el-row>
+        <hr>
+        <el-row>
+            <el-col :span="24" v-for="asset in assets" :key="asset.id">
+                <AssetItem :asset="asset"/>
+            </el-col>
+        </el-row>
+    </template>
+    <template v-slot:footer>
+        
+        <el-button class="modal-default-button" @click="$emit('close')">Close</el-button>
+    </template>
+</Modal>
